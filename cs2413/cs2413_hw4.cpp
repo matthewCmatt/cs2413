@@ -24,25 +24,24 @@ class Key_Value //Object holding the key/value pairs
 public:
 	int key;
 	char data;
-	Key_Value* next = nullptr;
+	Key_Value* next;
 
 	Key_Value() {
 		this->key = -1;
 		this->data = '*';
+		next = nullptr;
 	}
 
 	Key_Value(int key) {
 		this->key = key;
 		this->data = '&';
+		next = nullptr;
 	}
 
 	Key_Value(int key, char data) {
 		this->key = key;
 		this->data = data;
-	}
-
-	void set_data(char data) {
-		this->data = data;
+		next = nullptr;
 	}
 };
 
@@ -54,13 +53,11 @@ int hash(int modulus, int key) {
 int main() {
 	std::vector<Key_Value> inputs;
 	int table_type;
-	int modulus;
+	int modulus;					//Synonymous with hash table size.
 	std::queue<int> search_keys;
 	std::vector<Key_Value> hash_table;
 
-	[captures](params) -> ret { body }
-
-
+	//[captures](params) -> ret { body }
 
 	//INPUT KEYS
 	{
@@ -130,7 +127,7 @@ int main() {
 			int hash_value;
 			hash_table.assign(modulus, Key_Value());
 			Key_Value* pointer;
-			for (Key_Value obj : inputs) {
+			for (Key_Value &obj : inputs) {
 				hash_value = hash(modulus, obj.key);
 				if (hash_table.at(hash_value).key == -1) {
 					hash_table.at(hash_value) = obj;
@@ -147,7 +144,27 @@ int main() {
 
 		//Search for keys and output
 		{
+			int hash_value;
+			int search_key;
+			Key_Value* pointer;
+			while (!search_keys.empty()) {
+				search_key = search_keys.front();
+				hash_value = hash(modulus, search_key);
 
+				pointer = &hash_table.at(hash_value);									//Iterate through pointers unless the last in the chain or key is found.
+				while ((pointer->next != nullptr) && (pointer->key != search_key)) {
+					pointer = pointer->next;
+				}
+
+				if (pointer->key == search_key) {										//Print data of pointer element. It will either be '*' (if value wasn't found) or the actual data value for a given key.
+					std::cout << pointer->data << ' ';
+				}
+				else {
+					std::cout << "* ";
+				}
+
+				search_keys.pop();														//Iterate through all the search keys, doing this.
+			}
 		}
 
 		break;
@@ -156,7 +173,32 @@ int main() {
 			
 		//Make table
 		{
+			int hash_value;
+			int i;
+
+			rehash:
+
+			hash_table.assign(modulus, Key_Value());
+
+			for (Key_Value& obj : inputs) {
+				i = 0;
+				do {
+					hash_value = (int)(hash(modulus, obj.key) + std::pow(i, 2)) % hash_table.size();
+					i++;
+
+					if (i > hash_table.size()) {	//If we loop too many times, the hash_table is probably too small
+						modulus *= 2;				//so double the modulus/table size
+						std::cout << "Rehashed!";
+						goto rehash;				//and redo it.
+					}
+
+				} while ((hash_table.at(hash_value).key != -1));
 				
+				hash_table.at(hash_value) = obj;
+
+			}
+			
+			std::cout << "Done!";
 		}
 
 		//Search for keys and output
