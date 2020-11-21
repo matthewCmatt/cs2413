@@ -58,7 +58,7 @@ int main() {
 	std::queue<int> search_keys;
 	std::vector<Key_Value> hash_table;
 
-
+	[captures](params) -> ret { body }
 
 
 
