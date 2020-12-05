@@ -8,6 +8,7 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <cmath>
 
 	//Take keys (ending with -1)
 	//Take data (ending with *)
@@ -176,7 +177,7 @@ int main() {
 			int hash_value;
 			int i;
 
-			rehash:
+			rehash:		//Go to this location in the event that a rehash is needed.
 
 			hash_table.assign(modulus, Key_Value());
 
@@ -188,22 +189,41 @@ int main() {
 
 					if (i > hash_table.size()) {	//If we loop too many times, the hash_table is probably too small
 						modulus *= 2;				//so double the modulus/table size
-						std::cout << "Rehashed!";
-						goto rehash;				//and redo it.
+						goto rehash;				//and rehash table.
 					}
 
 				} while ((hash_table.at(hash_value).key != -1));
 				
 				hash_table.at(hash_value) = obj;
-
 			}
-			
-			std::cout << "Done!";
 		}
 
 		//Search for keys and output
 		{
+			int hash_value;
+			int search_key;
+			int i;
 
+			while (!search_keys.empty()) {
+				search_key = search_keys.front();
+				hash_value = hash(modulus, search_key);
+
+				i = 0;
+				do {		//Iterate through pointers unless the last in the chain or key is found.
+					hash_value = (int)(hash(modulus, search_key) + std::pow(i, 2)) % hash_table.size();
+					i++;
+					if (i > hash_table.size()) { break; }	//If we loop too many times, the value must not be present
+				} while ((hash_table.at(hash_value).key != search_key));
+
+				if (hash_table.at(hash_value).key == search_key) {				//Print data of pointer element. It will either be '*' (if value wasn't found) or the actual data value for a given key.
+					std::cout << hash_table.at(hash_value).data << ' ';
+				}
+				else {
+					std::cout << "* ";
+				}
+
+				search_keys.pop();								//Iterate through all the search keys, doing this.
+			}
 		}
 
 		break;

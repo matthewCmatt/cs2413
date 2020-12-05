@@ -1,8 +1,4 @@
-5 12 73 42 193 249 -1
-A r Q m t S *
-1
-7
-73 45 5 249 14 -1
+Each set of 5 lines below is an example input I used to test:
 
 0 1 2 3 -1
 a b c d *
@@ -34,3 +30,9 @@ a b c d e f g h i j k l *
 2
 10
 0 1 2 12 -1
+
+5 12 73 42 193 249 -1
+A r Q m t S *
+2
+7
+73 45 5 249 14 -1
