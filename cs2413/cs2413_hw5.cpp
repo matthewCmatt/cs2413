@@ -6,7 +6,9 @@ public:
 	int key;
 	node *left_child = nullptr;
 	node *right_child = nullptr;
+
 	node *next = nullptr;			//used in stack implementation
+	bool visited = false;
 
 	node(int key) {
 		this->key = key;
@@ -17,7 +19,8 @@ class node_stack {
 public:
 	bool pop() {
 		if (head != nullptr) {
-			std::cout << head->key;
+			std::cout << head->key << ' ';
+			head->visited = true;
 			head = head->next;
 			return true;
 		}
@@ -28,6 +31,16 @@ public:
 		node->next = head;
 		head = node;
 	}
+
+	bool isEmpty() {
+		if (head == nullptr) return true;
+		else return false;
+	}
+
+	node* getTop() {
+		return head;
+	}
+
 private:
 	node* head = nullptr;
 };
@@ -96,16 +109,28 @@ public:
 	}
 
 	void enumerate() {
+
 		node_stack stack;
 
-		//push element
-		//push elements root
+		stack.push(root);
 
+		while (!stack.isEmpty()) {
+			node *temp = stack.getTop();
 
+			bool right_valid = false;
+			bool left_valid = false;
 
+			if (temp->right_child != nullptr) {
+				if (temp->right_child->visited == false) right_valid = true;
+			}
+			if (temp->left_child != nullptr) {
+				if (temp->left_child->visited == false) left_valid = true;
+			}
 
-		while (stack.pop()) {}
-		std::cout << "Enumerated!";
+			if (right_valid) stack.push(temp->right_child);
+			if (left_valid) stack.push(temp->left_child);
+			if (!right_valid && !left_valid) stack.pop();
+		}
 	}
 
 private:
@@ -123,12 +148,8 @@ int main() {
 		tree.insert_key(key);
 	}
 
-
 	std::cin.clear();
 	std::cin.ignore(2, '\n');
-
-
-
 
 	//Input operation and operand
 	std::cin >> operation;
