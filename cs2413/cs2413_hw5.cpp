@@ -6,11 +6,32 @@ public:
 	int key;
 	node *left_child = nullptr;
 	node *right_child = nullptr;
+	node *next = nullptr;			//used in stack implementation
 
 	node(int key) {
 		this->key = key;
 	}
 };
+
+class node_stack {
+public:
+	bool pop() {
+		if (head != nullptr) {
+			std::cout << head->key;
+			head = head->next;
+			return true;
+		}
+		return false;
+	}
+
+	void push(node* node) {
+		node->next = head;
+		head = node;
+	}
+private:
+	node* head = nullptr;
+};
+
 
 class BST {
 public:
@@ -75,14 +96,15 @@ public:
 	}
 
 	void enumerate() {
+		node_stack stack;
+
+		//push element
+		//push elements root
 
 
 
 
-
-
-
-
+		while (stack.pop()) {}
 		std::cout << "Enumerated!";
 	}
 
