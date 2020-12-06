@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.30611.23
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cs2413", "cs2413\cs2413.vcxproj", "{839E0572-E1D6-460E-ADA5-260028568C08}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E88D4C73-7CC4-40B8-B38A-CF044B8F184B}"
+	ProjectSection(SolutionItems) = preProject
+		cs2413\cs2413_hw5_samples.txt = cs2413\cs2413_hw5_samples.txt
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64

@@ -15,10 +15,10 @@ public:
 class BST {
 public:
 	bool insert_key(int key) {
-		node **location = Search(key);
-		if (*location == nullptr) {
+		node **search_result = Search(key);
+		if (*search_result == nullptr) {
 			node *a = new node(key);
-			*location = a;		//the correct location is returned by search()
+			*search_result = a;
 			return true;
 		}
 		else {
@@ -27,14 +27,36 @@ public:
 	}
 
 	bool delete_key(int key) {
-		node** location = Search(key);
-		if (*location == nullptr) {
+		node **search_result = Search(key);
+		if (*search_result == nullptr) {
 			return false;
 		}
 		else {
-			//must ROTATE
-			delete location;
-			location = nullptr;
+			if ((*search_result)->left_child == nullptr) {
+				if ((*search_result)->right_child == nullptr) {	//has no children
+					*search_result = nullptr;
+				}
+				else {											//has right child
+					*search_result = (*search_result)->right_child;
+				}
+			}
+			else if ((*search_result)->right_child == nullptr) {		//has left child
+				*search_result = (*search_result)->left_child;
+			}
+			else {												//has two children
+
+				//Find smallest of the right subtree, to replace with the deleted key.
+				node* parent_of_smallest_right = *search_result;
+				while (parent_of_smallest_right->left_child != nullptr) {
+					while (parent_of_smallest_right->left_child->left_child != nullptr) {	//Assures that smallest_right has a grand child, to keep track of the parent of smallest child.
+						parent_of_smallest_right = parent_of_smallest_right->left_child;
+					}
+				}
+
+				delete_key(parent_of_smallest_right->left_child->key);
+
+				*search_result = parent_of_smallest_right->left_child; 
+			}
 			return true;
 		}
 	}
@@ -52,8 +74,16 @@ public:
 		return place;
 	}
 
-	void enumerate() {	//Print each element in the tree in post-order
-		//TODO TODO TODO TODO TODO TODO TODO TODO
+	void enumerate() {
+
+
+
+
+
+
+
+
+		std::cout << "Enumerated!";
 	}
 
 private:
@@ -61,8 +91,8 @@ private:
 };
 
 int main() {
-	BST tree;
-	int key;
+	BST tree;		//Binary Search Tree object
+	int key;		//Temporary input key
 	int operation;	//Key defining which operation we will carry out on the tree
 	int operand;	//Key associated with the operator
 
@@ -71,6 +101,13 @@ int main() {
 		tree.insert_key(key);
 	}
 
+
+	std::cin.clear();
+	std::cin.ignore(2, '\n');
+
+
+
+
 	//Input operation and operand
 	std::cin >> operation;
 	std::cin >> operand;
@@ -78,21 +115,34 @@ int main() {
 	//Complete operation
 	switch (operation) {
 		case 1: {
-			node** search_dptr = tree.Search(operand);
+			node** search_ptr_ptr = tree.Search(operand);
+			if (*search_ptr_ptr == nullptr) {
+				std::cout << -1;
+			}
+			else {
+				tree.enumerate();
+			}
+			break;
 		}
 		case 2: {
 			bool result = tree.insert_key(operand);
-		}	
-		case 3: {
-			bool result = tree.delete_key(operand);
 			if (result) {
-
+				tree.enumerate();
 			}
 			else {
 				std::cout << -1;
 			}
+			break;
+		}	
+		case 3: {
+			bool result = tree.delete_key(operand);
+			if (result) {
+				tree.enumerate();
+			}
+			else {
+				std::cout << -1;
+			}
+			break;
 		}
 	}
-
-	std::cout << "Paused";
 }
